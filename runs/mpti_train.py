@@ -82,8 +82,8 @@ def train(args):
                              }
                 torch.save(save_dict, os.path.join(args.log_dir, 'checkpoint.tar'))
         
-        # if (batch_idx+1) % 2000 == 0:
-        if batch_idx % 1 == 0:
+        if (batch_idx+1) % 2000 == 0:
+        # if batch_idx % 1 == 0:
             path = os.path.join(args.log_dir, 'checkpoint_' + str(batch_idx) + '.pth')
             save_dict = {'iteration': batch_idx + 1,
                              'model_state_dict': MPTI.model.state_dict(),
