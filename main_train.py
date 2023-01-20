@@ -2,9 +2,9 @@
 
 Author: Zhao Na, 2020
 
-"""  
+"""
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 import ast
 import argparse
 
@@ -13,7 +13,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     #data
-    parser.add_argument('--phase', type=str, default='prototrain', choices=['pretrain', 'finetune',
+    parser.add_argument('--phase', type=str, default='mptitrain', choices=['pretrain', 'finetune',
                                                                             'prototrain', 'protoeval',
                                                                             'mptitrain', 'mptieval'])
     parser.add_argument('--dataset', type=str, default='s3dis', help='Dataset name: s3dis|scannet')
@@ -21,11 +21,11 @@ if __name__ == '__main__':
                                                               'Options:{0,1}')
     parser.add_argument('--data_path', type=str, default='/media/user/volume2/dip21e033-2/shuqian/PointCloud/attMPTI/datasets/S3DIS/blocks_bs1_s1',
                                                     help='Directory to the source data')
-    parser.add_argument('--pretrain_checkpoint_path', type=str, default='/media/user/volume2/dip21e033-2/shuqian/PointCloud/attMPTI/logs/log_s3dis/log_pretrain_s3dis_S0/',
+    parser.add_argument('--pretrain_checkpoint_path', type=str, default='/media/user/volume2/dip21e033-2/shuqian/PointCloud/attMPTI_1/logs/log_s3dis/log_pretrain_s3dis_S0/',
                         help='Path to the checkpoint of pre model for resuming')  # 预训练模型地址
     parser.add_argument('--model_checkpoint_path', type=str, default=None,
                         help='Path to the checkpoint of model for resuming')  # test时的模型地址
-    parser.add_argument('--save_path', type=str, default='/media/user/volume2/dip21e033-2/shuqian/PointCloud/attMPTI/logs/log_s3dis_test/',
+    parser.add_argument('--save_path', type=str, default='/media/user/volume2/dip21e033-2/shuqian/PointCloud/attMPTI_1/logs/log_s3dis_test/',
                         help='Directory to the save log and checkpoints')
     parser.add_argument('--eval_interval', type=int, default=2000,
                         help='iteration/epoch inverval to evaluate model')
@@ -78,7 +78,7 @@ if __name__ == '__main__':
     parser.add_argument('--use_attention', action='store_true', default=True, help='if incorporate attention learner')
 
     # protoNet configuration
-    parser.add_argument('--dist_method', default='gaussian',
+    parser.add_argument('--dist_method', default='cosine',
                         help='Method to compute distance between query feature maps and prototypes.[Option: cosine|euclidean]')
 
     # MPTI configuration
@@ -102,22 +102,22 @@ if __name__ == '__main__':
                                                                              args.use_attention)
         from runs.mpti_train import train
         train(args)
-    elif args.phase=='prototrain':  # mono-prototype train
+    elif args.phase=='prototrain':
         args.log_dir = args.save_path + 'log_proto_%s_S%d_N%d_K%d_TL%d_Att%d' %(args.dataset, args.cvfold,
                                                                              args.n_way, args.k_shot,
-                                                                             (args.triplet_loss_weight>0),
+                                                                             True, # (args.triplet_loss_weight>0),
                                                                              args.use_attention)
         from runs.proto_train import train
         train(args)
-    elif args.phase=='protoeval' or args.phase=='mptieval':  # mono-prototype or multi-prototype eval
+    elif args.phase=='protoeval' or args.phase=='mptieval':
         args.log_dir = args.model_checkpoint_path
         from runs.eval import eval
         eval(args)
-    elif args.phase=='pretrain':  # pretrain
+    elif args.phase=='pretrain':
         args.log_dir = args.save_path + 'log_pretrain_%s_S%d' % (args.dataset, args.cvfold)
         from runs.pre_train import pretrain
         pretrain(args)
-    elif args.phase=='finetune':  # finetune
+    elif args.phase=='finetune':
         args.log_dir = args.save_path + 'log_finetune_%s_S%d_N%d_K%d' % (args.dataset, args.cvfold,
                                                                             args.n_way, args.k_shot)
         from runs.fine_tune import finetune
