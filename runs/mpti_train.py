@@ -17,9 +17,14 @@ from utils.logger import init_logger
 def train(args):
     logger = init_logger(args.log_dir, args)
 
-    # os.system('cp models/mpti_learner.py %s' % (args.log_dir))
-    # os.system('cp models/mpti.py %s' % (args.log_dir))
-    # os.system('cp models/dgcnn.py %s' % (args.log_dir))
+    # yang
+    log_model_path = os.path.join(args.log_dir, 'models')
+    if not os.path.exists(log_model_path):
+        os.makedirs(log_model_path)
+    os.system('cp models/mpti_learner.py %s' % (log_model_path))
+    os.system('cp models/mpti.py %s' % (log_model_path))
+    os.system('cp models/dgcnn.py %s' % (log_model_path))
+    os.system('cp runs/mpti_train.py %s' % (log_model_path))
 
     # init model and optimizer
     MPTI = MPTILearner(args)
@@ -62,7 +67,6 @@ def train(args):
         WRITER.add_scalar('Train/accuracy', accuracy, batch_idx)
 
         if (batch_idx+1) % args.eval_interval == 0:
-
             valid_loss, mean_IoU = test_few_shot(VALID_LOADER, MPTI, logger, VALID_CLASSES)
             logger.cprint('\n=====[VALID] Loss: %.4f | Mean IoU: %f  =====\n' % (valid_loss, mean_IoU))
             WRITER.add_scalar('Valid/loss', valid_loss, batch_idx)
@@ -77,5 +81,16 @@ def train(args):
                              'IoU': best_iou
                              }
                 torch.save(save_dict, os.path.join(args.log_dir, 'checkpoint.tar'))
+        
+        # if (batch_idx+1) % 2000 == 0:
+        if batch_idx % 1 == 0:
+            path = os.path.join(args.log_dir, 'checkpoint_' + str(batch_idx) + '.pth')
+            save_dict = {'iteration': batch_idx + 1,
+                             'model_state_dict': MPTI.model.state_dict(),
+                             'optimizer_state_dict': MPTI.optimizer.state_dict(),
+                             'loss': loss
+                             }
+            torch.save(save_dict, path)
+            print('Checkpoint saved to %s' % path)
 
     WRITER.close()
