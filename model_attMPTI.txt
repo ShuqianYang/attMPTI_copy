@@ -1,0 +1,127 @@
+encoder.edge_convs.0.layer.0.weight
+encoder.edge_convs.0.layer.1.weight
+encoder.edge_convs.0.layer.1.bias
+encoder.edge_convs.0.layer.1.running_mean
+encoder.edge_convs.0.layer.1.running_var
+encoder.edge_convs.0.layer.1.num_batches_tracked
+encoder.edge_convs.0.layer.3.weight
+encoder.edge_convs.0.layer.4.weight
+encoder.edge_convs.0.layer.4.bias
+encoder.edge_convs.0.layer.4.running_mean
+encoder.edge_convs.0.layer.4.running_var
+encoder.edge_convs.0.layer.4.num_batches_tracked
+encoder.edge_convs.1.layer.0.weight
+encoder.edge_convs.1.layer.1.weight
+encoder.edge_convs.1.layer.1.bias
+encoder.edge_convs.1.layer.1.running_mean
+encoder.edge_convs.1.layer.1.running_var
+encoder.edge_convs.1.layer.1.num_batches_tracked
+encoder.edge_convs.1.layer.3.weight
+encoder.edge_convs.1.layer.4.weight
+encoder.edge_convs.1.layer.4.bias
+encoder.edge_convs.1.layer.4.running_mean
+encoder.edge_convs.1.layer.4.running_var
+encoder.edge_convs.1.layer.4.num_batches_tracked
+encoder.edge_convs.2.layer.0.weight
+encoder.edge_convs.2.layer.1.weight
+encoder.edge_convs.2.layer.3.weight
+encoder.edge_convs.2.layer.4.weight
+encoder.edge_convs.2.layer.4.bias
+encoder.edge_convs.2.layer.4.running_mean
+encoder.edge_convs.2.layer.4.running_var
+encoder.edge_convs.2.layer.4.num_batches_tracked
+encoder.conv.layer.0.weight
+encoder.conv.layer.1.weight
+encoder.conv.layer.1.bias
+encoder.conv.layer.1.running_mean
+encoder.conv.layer.1.running_var
+encoder.conv.layer.1.num_batches_tracked
+encoder.conv.layer.3.weight
+encoder.conv.layer.4.weight
+encoder.conv.layer.4.bias
+encoder.conv.layer.4.running_mean
+encoder.conv.layer.4.running_var
+encoder.conv.layer.4.num_batches_tracked
+base_learner.convs.0.0.weight
+base_learner.convs.0.0.bias
+base_learner.convs.0.1.weight
+base_learner.convs.0.1.bias
+base_learner.convs.0.1.running_mean
+base_learner.convs.0.1.running_var
+base_learner.convs.0.1.num_batches_tracked
+base_learner.convs.1.0.weight
+base_learner.convs.1.0.bias
+base_learner.convs.1.1.weight
+base_learner.convs.1.1.bias
+base_learner.convs.1.1.running_mean
+base_learner.convs.1.1.running_var
+base_learner.convs.1.1.num_batches_tracked
+att_learner.q_map.weight
+att_learner.k_map.weight
+att_learner.v_map.weight
+
+
+MultiPrototypeTransductiveInference(
+  (encoder): DGCNN(
+    (edge_convs): ModuleList(
+      (0): conv2d(
+        (layer): Sequential(
+          (0): Conv2d(18, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (2): LeakyReLU(negative_slope=0.2)
+          (3): Conv2d(64, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (4): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (5): LeakyReLU(negative_slope=0.2)
+        )
+      )
+      (1): conv2d(
+        (layer): Sequential(
+          (0): Conv2d(128, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (2): LeakyReLU(negative_slope=0.2)
+          (3): Conv2d(64, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (4): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (5): LeakyReLU(negative_slope=0.2)
+        )
+      )
+      (2): conv2d(
+        (layer): Sequential(
+          (0): Conv2d(128, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (2): LeakyReLU(negative_slope=0.2)
+          (3): Conv2d(64, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (4): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (5): LeakyReLU(negative_slope=0.2)
+        )
+      )
+    )
+    (conv): conv1d(
+      (layer): Sequential(
+        (0): Conv1d(192, 512, kernel_size=(1,), stride=(1,), bias=False)
+        (1): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): LeakyReLU(negative_slope=0.2)
+        (3): Conv1d(512, 256, kernel_size=(1,), stride=(1,), bias=False)
+        (4): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (5): LeakyReLU(negative_slope=0.2)
+      )
+    )
+  )
+  (base_learner): BaseLearner(
+    (convs): ModuleList(
+      (0): Sequential(
+        (0): Conv1d(256, 128, kernel_size=(1,), stride=(1,))
+        (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (1): Sequential(
+        (0): Conv1d(128, 64, kernel_size=(1,), stride=(1,))
+        (1): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+    )
+  )
+  (att_learner): SelfAttention(
+    (q_map): Conv1d(256, 64, kernel_size=(1,), stride=(1,), bias=False)
+    (k_map): Conv1d(256, 64, kernel_size=(1,), stride=(1,), bias=False)
+    (v_map): Conv1d(256, 64, kernel_size=(1,), stride=(1,), bias=False)
+    (dropout): Dropout(p=0.1, inplace=False)
+  )
+)

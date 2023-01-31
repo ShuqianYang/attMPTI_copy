@@ -1,0 +1,106 @@
+############################ log位置 ############################
+--data_path: dataset--block的地址
+--pretrain_checkpoint_path: 预训练checkpoint的保存位置
+--model_checkpoint_path: 模型checkpoint的保存位置（用于保存训练后的checkpoint）
+--save_path: 保存log的地址
+    args.log_dir：根据训练模式不同，文件不同
+
+
+############################ Code ############################
+dataloders:
+    loader.py:
+        - 几个大类 MyDataset, MyTestDataset, MyPretrainDataset
+    s3dis.py: 
+        - 加载s3dis数据集
+    scannet.py：
+        - 加载scannet数据集
+
+------------------------------------------------------ 
+datasets:
+
+------------------------------------------------------ 
+logs:
+
+------------------------------------------------------ 
+models:
+    attention.py: 
+        - SelfAttention模块
+    dgcnn.py：
+        - dgcnn模块
+    mpti_learner.py:
+        - MPTILearner类 train or test，用于设置模型，进行multi-prototype训练
+    mpti.py:
+        - MultiPrototypeTransductiveInference类，multi-prototype训练的网络模型
+    proto_learner.py:
+        - ProtoLearner类 train or test，用于设置模型，进行mono-prototype训练
+    protonet.py:
+        - ProtoNet类，mono-prototype训练的网络模型
+
+------------------------------------------------------ 
+preprocess:
+    collect_s3dis_data.py: 
+        - Collect point clouds and the corresponding labels from original dataset, and save into numpy files. 
+        - shape: (num_point, 7), 格式为 xyzRGBl，其中xyz是原始值，l是每个点的label，RGB(0~225)
+    collect_scannet_data.py:
+    room2blocks.py:
+        - Processing step 1, split room into blocks, , and save into numpy files
+        - 每个block是一个文件，shape: (num_point, 7), 格式为 xyzRGBl，其中xyz是平移到原点，l是每个点的label，RGB(0~225)
+
+------------------------------------------------------ 
+runs:
+    pre_train.py
+        - pretrain 的主文件
+    mpti_train.py
+        - multi-prototype 的主文件
+    proto_train.py
+        - mono-prototype 的主文件
+    eval.py:
+        - eval 的主文件
+    fine_tune.py：
+        - finetune 的主文件
+
+------------------------------------------------------ 
+scripts:
+    pretrain_segmentor.sh
+    train_attMPTI.sh
+    eval_attMPTI.sh
+
+------------------------------------------------------ 
+utils:
+    checkpoint_util.py:
+        - save/load checkpoints
+    cuda_util.py
+    logger.py
+
+------------------------------------------------------ 
+main_pretrain.py
+main_train.py
+main_eval.py
+
+
+
+############################ Data ############################
+Processing:
+数据处理：
+    - 根据cvfold，一半的类用于预训练，一半的类用于抽取support 和 query
+    - pertrain中选择fold_0，只取fold_1进行预训练
+    - train中选择fold_0，取fold_1为train，fold_0为test
+    - mask的label是true和false
+
+预训练：
+    - 喂到网络中的训练数据：
+        - 格式：data_batch: (num_block, num_point, 9)
+                012 channels: xyz是平移到原点后做jitter
+                345 channels: RGB (0-1)
+                678 channels: normalized XYZ for the scene（0~1）
+            label_batch: (num_block, num_point)
+    - 喂到网络中的测试数据：
+
+训练：
+    - train:
+
+    - 提前保存test的episode，一共1500个episode，每一组保存在 'datasets/S3DIS/blocks_bs1_s1/S_0_N_2_K_1_episodes_100_pts_2048'
+        - 格式为：support_ptclouds: (n_way, k_shot, 2048, 9)
+                support_masks: (n_way, k_shot, 2048)
+                query_ptclouds: (n_way, 2048, 9)
+                query_labels: (n_way, 2048)

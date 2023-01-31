@@ -4,7 +4,7 @@ Author: Zhao Na, 2020
 
 """
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 import ast
 import argparse
 
@@ -17,7 +17,7 @@ if __name__ == '__main__':
                                                                             'prototrain', 'protoeval',
                                                                             'mptitrain', 'mptieval'])
     parser.add_argument('--dataset', type=str, default='s3dis', help='Dataset name: s3dis|scannet')
-    parser.add_argument('--cvfold', type=int, default=0, help='Fold left-out for testing in leave-one-out setting'  # 交叉验证
+    parser.add_argument('--cvfold', type=int, default=0, help='Fold left-out for testing in leave-one-out setting '
                                                               'Options:{0,1}')
     parser.add_argument('--data_path', type=str, default='/media/user/volume2/dip21e033-2/shuqian/PointCloud/attMPTI/datasets/S3DIS/blocks_bs1_s1',
                                                     help='Directory to the source data')
@@ -25,7 +25,7 @@ if __name__ == '__main__':
                         help='Path to the checkpoint of pre model for resuming')
     parser.add_argument('--model_checkpoint_path', type=str, default=None,
                         help='Path to the checkpoint of model for resuming')
-    parser.add_argument('--save_path', type=str, default='/media/user/volume2/dip21e033-2/shuqian/PointCloud/attMPTI/logs/log_s3dis_test/',
+    parser.add_argument('--save_path', type=str, default='/media/user/volume2/dip21e033-2/shuqian/PointCloud/attMPTI_1/logs/log_s3dis/',
                         help='Directory to the save log and checkpoints')
     parser.add_argument('--eval_interval', type=int, default=3,
                         help='iteration/epoch inverval to evaluate model')

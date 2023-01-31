@@ -25,7 +25,7 @@ if __name__ == '__main__':
                         help='Path to the checkpoint of pre model for resuming')  # 预训练模型地址
     parser.add_argument('--model_checkpoint_path', type=str, default=None,
                         help='Path to the checkpoint of model for resuming')  # test时的模型地址
-    parser.add_argument('--save_path', type=str, default='/media/user/volume2/dip21e033-2/shuqian/PointCloud/attMPTI_1/logs/log_s3dis_test/',
+    parser.add_argument('--save_path', type=str, default='/media/user/volume2/dip21e033-2/shuqian/PointCloud/attMPTI_1/logs/log_s3dis_30episode_test/',
                         help='Directory to the save log and checkpoints')
     parser.add_argument('--eval_interval', type=int, default=2000,
                         help='iteration/epoch inverval to evaluate model')
@@ -49,7 +49,7 @@ if __name__ == '__main__':
     parser.add_argument('--n_way', type=int, default=2, help='Number of classes for each episode: 1|3')
     parser.add_argument('--k_shot', type=int, default=1, help='Number of samples/shots for each class: 1|5')
     parser.add_argument('--n_queries', type=int, default=1, help='Number of queries for each class')
-    parser.add_argument('--n_episode_test', type=int, default=100,
+    parser.add_argument('--n_episode_test', type=int, default=30,  # 100
                         help='Number of episode per configuration during testing')
 
     # Point cloud processing
