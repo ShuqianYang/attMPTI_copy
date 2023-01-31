@@ -66,7 +66,7 @@ class ProtoNet(nn.Module):
         support_x = support_x.view(self.n_way*self.k_shot, self.in_channels, self.n_points)
         support_feat = self.getFeatures(support_x)
         support_feat = support_feat.view(self.n_way, self.k_shot, -1, self.n_points)
-        query_feat = self.getFeatures(query_x) #(n_queries, feat_dim, num_points)
+        query_feat = self.getFeatures(query_x) 
 
         fg_mask = support_y
         bg_mask = torch.logical_not(support_y)

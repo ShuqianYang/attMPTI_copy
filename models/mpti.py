@@ -80,16 +80,16 @@ class MultiPrototypeTransductiveInference(nn.Module):
         query_feat = self.getFeatures(query_x) #(n_queries, feat_dim, num_points)
         query_feat = query_feat.transpose(1,2).contiguous().view(-1, self.feat_dim) #(n_queries*num_points, feat_dim)
 
-        fg_mask = support_y
-        bg_mask = torch.logical_not(support_y)
+        fg_mask = support_y  # (n_way, k_shot, num_points)
+        bg_mask = torch.logical_not(support_y)  # (n_way, k_shot, num_points)
 
-        fg_prototypes, fg_labels = self.getForegroundPrototypes(support_feat, fg_mask, k=self.n_subprototypes)
-        bg_prototype, bg_labels = self.getBackgroundPrototypes(support_feat, bg_mask, k=self.n_subprototypes)
+        fg_prototypes, fg_labels = self.getForegroundPrototypes(support_feat, fg_mask, k=self.n_subprototypes)  # (n_way*k, feat_dim) 200,192,  (n_way*k, n_way+1) 200,3 label是每一个 way 的 prototype 的 onehot 编码
+        bg_prototype, bg_labels = self.getBackgroundPrototypes(support_feat, bg_mask, k=self.n_subprototypes)  # (k, feat_dim) 100,192, (k, n_way+1) 100,3  label是背景的 prototype 的 onehot 编码
 
         # prototype learning
         if bg_prototype is not None and bg_labels is not None:
-            prototypes = torch.cat((bg_prototype, fg_prototypes), dim=0) #(*, feat_dim)
-            prototype_labels = torch.cat((bg_labels, fg_labels), dim=0) #(*,n_classes)
+            prototypes = torch.cat((bg_prototype, fg_prototypes), dim=0) # ((n_way+1)*k, feat_dim)  (300,192)  # 三种原型拼接在一起，共同进行计算
+            prototype_labels = torch.cat((bg_labels, fg_labels), dim=0) # ((n_way+1)*k, n_way+1)  (300,3)
         else:
             prototypes = fg_prototypes
             prototype_labels = fg_labels
