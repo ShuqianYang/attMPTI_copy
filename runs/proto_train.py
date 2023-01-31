@@ -17,9 +17,13 @@ from utils.logger import init_logger
 def train(args):
     logger = init_logger(args.log_dir, args)
 
-    # os.system('cp models/proto_learner.py %s' % (args.log_dir))
-    # os.system('cp models/task_learner.py %s' % (args.log_dir))
-    # os.system('cp models/dgcnn.py %s' % (args.log_dir))
+    log_model_path = os.path.join(args.log_dir, 'models')
+    if not os.path.exists(log_model_path):
+        os.makedirs(log_model_path)
+    os.system('cp models/proto_learner.py %s' % (log_model_path))
+    os.system('cp models/protobet.py %s' % (log_model_path))
+    os.system('cp models/dgcnn.py %s' % (log_model_path))
+    os.system('cp runs/proto_train.py %s' % (log_model_path))
 
     # init model and optimizer
     PL = ProtoLearner(args)
@@ -62,7 +66,7 @@ def train(args):
         WRITER.add_scalar('Train/accuracy', accuracy, batch_idx)
 
         if (batch_idx+1) % args.eval_interval == 0:
-
+            
             valid_loss, mean_IoU = test_few_shot(VALID_LOADER, PL, logger, VALID_CLASSES)
             logger.cprint('\n=====[VALID] Loss: %.4f | Mean IoU: %f =====\n' % (valid_loss, mean_IoU))
             WRITER.add_scalar('Valid/loss', valid_loss, batch_idx)

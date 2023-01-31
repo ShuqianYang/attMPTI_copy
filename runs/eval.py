@@ -86,12 +86,12 @@ def test_few_shot(test_loader, learner, logger, test_classes):
         total_loss += loss.detach().item()
 
         if (batch_idx+1) % 50 == 0:
-            logger.cprint('[Eval] Iter: %d | Loss: %.4f | %s' % ( batch_idx+1, loss.detach().item(), str(datetime.now())))
+            logger.cprint('[Eval] Iter: %d | Loss: %.4f | %s' % (batch_idx+1, loss.detach().item(), str(datetime.now())))
 
         #compute metric for predictions
         predicted_label_total.append(query_pred.cpu().detach().numpy())
         gt_label_total.append(query_label.numpy())
-        label2class_total.append(sampled_classes)
+        label2class_total.append(sampled_classes)  
 
     mean_loss = total_loss/len(test_loader)
     mean_IoU = evaluate_metric(logger, predicted_label_total, gt_label_total, label2class_total, test_classes)
